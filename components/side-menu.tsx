@@ -3,12 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Chat } from '@/lib/chat';
 import {
-  getChats,
-  getCurrentChatId,
-  setCurrentChatId,
-  deleteChat,
-} from '@/lib/chat';
-import {
   CalendarIcon,
   ChevronLeftIcon,
   MenuIcon,
@@ -22,6 +16,8 @@ interface SideMenuProps {
   currentChatId: string | null;
   onChatSelect: (chatId: string) => void;
   onNewChat: () => void;
+  onDeleteChat: (chatId: string) => Promise<void>;
+  onClearAllChats: () => Promise<void>;
 }
 
 export function SideMenu({
@@ -29,6 +25,8 @@ export function SideMenu({
   currentChatId,
   onChatSelect,
   onNewChat,
+  onDeleteChat,
+  onClearAllChats,
 }: SideMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -53,26 +51,20 @@ export function SideMenu({
     }
   };
 
-  const handleDeleteChat = (e: React.MouseEvent, chatId: string) => {
+  const handleDeleteChat = async (e: React.MouseEvent, chatId: string) => {
     e.stopPropagation();
-    deleteChat(chatId);
-    if (chatId === currentChatId) {
-      const remainingChats = getChats();
-      if (remainingChats.length > 0) {
-        handleChatSelect(remainingChats[0].id);
-      } else {
-        onNewChat();
-      }
+    await onDeleteChat(chatId);
+    if (chatId === currentChatId && chats.length > 0) {
+      handleChatSelect(chats[0].id);
+    } else if (chats.length === 0) {
+      onNewChat();
     }
   };
 
-  const handleClearAllChats = () => {
-    chats.forEach((chat) => deleteChat(chat.id));
-    onNewChat();
-  };
-
   // Sort chats by date, newest first
-  const sortedChats = [...chats].sort((a, b) => b.updatedAt - a.updatedAt);
+  const sortedChats = [...chats].sort(
+    (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at)
+  );
 
   if (!mounted) {
     return null;
@@ -139,7 +131,7 @@ export function SideMenu({
                       {chat.messages[0]?.content || 'New Chat'}
                     </div>
                     <div className='text-xs text-muted-foreground mt-1'>
-                      {new Date(chat.updatedAt).toLocaleDateString()}
+                      {new Date(chat.updated_at).toLocaleDateString()}
                     </div>
                   </div>
                   <button
@@ -177,7 +169,7 @@ export function SideMenu({
             )}
             {chats.length > 0 && (
               <button
-                onClick={handleClearAllChats}
+                onClick={onClearAllChats}
                 className='w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors'
               >
                 <TrashIcon size={16} />

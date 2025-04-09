@@ -6,14 +6,9 @@ import { useScrollToBottom } from '@/components/use-scroll-to-bottom';
 import { motion } from 'framer-motion';
 import { CalendarIcon, ClockIcon, SparklesIcon } from '@/components/icons';
 import { useChat } from 'ai/react';
-import {
-  getCurrentChatId,
-  saveChat,
-  createNewChat,
-  getChats,
-  Chat,
-} from '@/lib/chat';
+import { getCurrentChatId, createNewChat, Chat } from '@/lib/chat';
 import { SideMenu } from '@/components/side-menu';
+import { useChats } from '@/lib/hooks/use-chats';
 
 const suggestedActions = [
   {
@@ -39,75 +34,102 @@ const suggestedActions = [
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
-  const [chats, setChats] = useState<Chat[]>([]);
-  const { messages, handleSubmit, input, setInput, append, setMessages } =
-    useChat({
-      id: currentChatId || undefined,
-    });
+  const {
+    chats,
+    isLoading: chatsLoading,
+    updateChat,
+    removeChat,
+    clearAllChats,
+  } = useChats();
+
+  const {
+    messages,
+    handleSubmit,
+    input,
+    setInput,
+    append,
+    setMessages,
+    isLoading: streamLoading,
+  } = useChat({
+    id: currentChatId || undefined,
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
 
+  const saveTimeout = useRef<NodeJS.Timeout>();
+
   // Initialize client-side state
   useEffect(() => {
     setIsClient(true);
     setCurrentChatId(getCurrentChatId());
-    setChats(getChats());
   }, []);
-
-  // Save messages to localStorage whenever they change
-  useEffect(() => {
-    if (isClient && currentChatId) {
-      const chat = {
-        id: currentChatId,
-        messages,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      };
-      saveChat(chat);
-      setChats(getChats());
-    }
-  }, [messages, currentChatId, isClient]);
-
-  // Load initial messages if there's a current chat
-  useEffect(() => {
-    if (isClient && currentChatId) {
-      const chats = getChats();
-      const chat = chats.find((c) => c.id === currentChatId);
-      if (chat) {
-        setMessages(chat.messages);
-      }
-    }
-  }, [currentChatId, setMessages, isClient]);
-
-  const handleNewChat = () => {
-    if (!isClient) return;
-    const newChat = createNewChat();
-    setCurrentChatId(newChat.id);
-    setMessages([]);
-    setInput('');
-    setChats(getChats());
-  };
 
   const handleChatSelect = (chatId: string) => {
     if (!isClient) return;
     setCurrentChatId(chatId);
     setInput('');
-    // Load messages for the selected chat
-    const chats = getChats();
-    const chat = chats.find((c) => c.id === chatId);
+    // Use existing chats data instead of refetching
+    const chat = chats.find((c: Chat) => c.id === chatId);
     if (chat) {
       setMessages(chat.messages);
     }
   };
 
-  const handleSubmitWithChat = (e: React.FormEvent) => {
+  // Load initial messages if there's a current chat
+  useEffect(() => {
+    if (isClient && currentChatId) {
+      const chat = chats.find((c: Chat) => c.id === currentChatId);
+      if (chat) {
+        setMessages(chat.messages);
+      }
+    }
+  }, [currentChatId, setMessages, isClient, chats]);
+
+  // Save messages whenever they change and streaming is complete
+  useEffect(() => {
+    if (!isClient || !currentChatId || messages.length === 0 || streamLoading) {
+      return;
+    }
+
+    // Only save if messages have actually changed
+    const currentChat = chats.find((c: Chat) => c.id === currentChatId);
+    if (
+      !currentChat ||
+      JSON.stringify(currentChat.messages) !== JSON.stringify(messages)
+    ) {
+      // Clear any existing timeout
+      if (saveTimeout.current) {
+        clearTimeout(saveTimeout.current);
+      }
+
+      // Set new timeout for debounced save
+      saveTimeout.current = setTimeout(() => {
+        updateChat(currentChatId, messages);
+      }, 2000);
+    }
+
+    return () => {
+      if (saveTimeout.current) {
+        clearTimeout(saveTimeout.current);
+      }
+    };
+  }, [messages, currentChatId, isClient, chats, streamLoading, updateChat]);
+
+  const handleNewChat = async () => {
+    if (!isClient) return;
+    const newChat = await createNewChat();
+    setCurrentChatId(newChat.id);
+    setMessages([]);
+    setInput('');
+  };
+
+  const handleSubmitWithChat = async (e: React.FormEvent) => {
     if (!isClient) return;
     if (!currentChatId) {
-      const newChat = createNewChat();
+      const newChat = await createNewChat();
       setCurrentChatId(newChat.id);
-      setChats(getChats());
     }
     handleSubmit(e);
   };
@@ -124,6 +146,8 @@ export default function Home() {
         currentChatId={currentChatId}
         onChatSelect={handleChatSelect}
         onNewChat={handleNewChat}
+        onDeleteChat={removeChat}
+        onClearAllChats={clearAllChats}
       />
 
       {/* Main Content */}
@@ -190,9 +214,9 @@ export default function Home() {
                       key={index}
                     >
                       <button
-                        onClick={() => {
+                        onClick={async () => {
                           if (!currentChatId) {
-                            const newChat = createNewChat();
+                            const newChat = await createNewChat();
                             setCurrentChatId(newChat.id);
                           }
                           append({

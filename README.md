@@ -1,40 +1,68 @@
-# Multi-Steps Preview
+# Smart Day Planner
 
-This example demonstrates how to use the [AI SDK](https://sdk.vercel.ai/docs) with [Next.js](https://nextjs.org/) and the `streamText` function to automatically handle multi-step generations.
+A responsive web application designed to help users plan their day in a fun, effective, and intelligent way. Simply input your tasks, and let our AI generate an optimal, time-based schedule with thoughtful justifications for task ordering.
 
-## Deploy your own
+## Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-sdk-preview-steps-reasoning&env=OPENAI_API_KEY&envDescription=OpenAI%20API%20Key%20Needed&envLink=https%3A%2F%2Fplatform.openai.com)
+- 📝 Intuitive task input interface
+- 🤖 AI-powered schedule generation
+- ⏰ Smart time blocking and task organization
+- 📱 Mobile-first responsive design
+- 🌓 Light/Dark mode support
+- ✨ Beautiful, modern UI using shadcn/ui components
 
-## How to use
+## Tech Stack
 
-Run [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+- **Frontend**: Next.js with TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **AI Integration**: Vercel AI SDK with OpenAI GPT-4o Reasoning for intelligent scheduling
+- **Deployment**: Vercel
+
+## Getting Started
+
+1. Clone the repository:
 
 ```bash
-npx create-next-app --example https://github.com/vercel-labs/ai-sdk-preview-steps-reasoning ai-sdk-preview-steps-reasoning-example
+git clone https://github.com/yourusername/day-planner.git
+cd day-planner
 ```
+
+2. Install dependencies:
 
 ```bash
-yarn create next-app --example https://github.com/vercel-labs/ai-sdk-preview-steps-reasoning ai-sdk-preview-steps-reasoning-example
+pnpm install
 ```
+
+3. Run the development server:
 
 ```bash
-pnpm create next-app --example https://github.com/vercel-labs/ai-sdk-preview-steps-reasoning ai-sdk-preview-steps-reasoning-example
+pnpm dev
 ```
 
-To run the example locally you need to:
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-1. Sign up for accounts with the AI providers you want to use (e.g., OpenAI, Anthropic).
-2. Obtain API keys for each provider.
-3. Set the required environment variables as shown in the `.env.example` file, but in a new file called `.env`.
-4. `npm install` to install the required dependencies.
-5. `npm run dev` to launch the development server.
+## How It Works
 
+1. Enter your tasks for the day
+2. Click "Plan My Day"
+3. Our AI will analyze your tasks considering:
+   - Task dependencies
+   - Time-of-day relevance
+   - Similar task grouping
+4. Receive a beautifully formatted schedule with explanations
 
-## Learn More
+## Contributing
 
-To learn more about the AI SDK or Next.js take a look at the following resources:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-- [AI SDK docs](https://sdk.vercel.ai/docs)
-- [Vercel AI Playground](https://play.vercel.ai)
-- [Next.js Documentation](https://nextjs.org/docs)
+## License
+
+MIT License - feel free to use this project for your own purposes.
+
+## Future Enhancements
+
+- Drag-and-drop timeline editing
+- Voice input for tasks
+- Calendar export (Google Calendar, iCal)
+- Daily reminders and notifications

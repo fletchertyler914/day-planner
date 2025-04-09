@@ -7,11 +7,6 @@ export function useChats() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load initial chats
-  useEffect(() => {
-    loadChats();
-  }, []);
-
   // Load chats from the database
   const loadChats = useCallback(async () => {
     setIsLoading(true);
@@ -24,6 +19,11 @@ export function useChats() {
       setIsLoading(false);
     }
   }, []);
+
+  // Load initial chats
+  useEffect(() => {
+    loadChats();
+  }, [loadChats]);
 
   // Update a chat with optimistic update
   const updateChat = useCallback(

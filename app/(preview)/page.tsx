@@ -58,7 +58,7 @@ export default function Home() {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
 
-  const saveTimeout = useRef<NodeJS.Timeout>();
+  const saveTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize client-side state
   useEffect(() => {
@@ -170,8 +170,8 @@ export default function Home() {
                     </div>
 
                     <p className='text-lg text-foreground text-center max-w-lg'>
-                      Let me help you organize your day in the most effective
-                      way possible.
+                      Let&apos;s help you organize your day in the most
+                      effective way possible.
                     </p>
 
                     <div className='w-full max-w-md space-y-3'>
@@ -198,8 +198,8 @@ export default function Home() {
                     </div>
 
                     <p className='text-muted-foreground text-center'>
-                      Try one of the examples below or tell me what you'd like
-                      to plan!
+                      Try one of the examples below or tell me what you&apos;d
+                      like to plan!
                     </p>
                   </div>
                 </motion.div>

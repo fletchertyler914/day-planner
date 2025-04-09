@@ -9,33 +9,6 @@ import { Message as TMessage, ToolInvocation } from 'ai';
 import { ReasoningStep } from './reasoning-step';
 import { Timeline } from './timeline';
 
-const LoadingBubbles = () => (
-  <div className='flex flex-col gap-2 px-4'>
-    <div className='flex justify-end'>
-      <div className='size-[32px] flex justify-center items-center flex-shrink-0 rounded-full bg-primary/10 border border-primary/20'>
-        <BotIcon className='text-primary' />
-      </div>
-    </div>
-    <div className='flex items-center gap-1'>
-      <motion.div
-        className='size-2 rounded-full bg-primary/40'
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-      />
-      <motion.div
-        className='size-2 rounded-full bg-primary/40'
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-      />
-      <motion.div
-        className='size-2 rounded-full bg-primary/40'
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-      />
-    </div>
-  </div>
-);
-
 export const TextStreamMessage = ({
   content,
 }: {

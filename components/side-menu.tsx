@@ -10,6 +10,7 @@ import {
   TrashIcon,
 } from './icons';
 import { useTheme } from 'next-themes';
+import { ApiKeyInput } from './api-key-input';
 
 interface SideMenuProps {
   chats: Chat[];
@@ -145,6 +146,7 @@ export function SideMenu({
 
           {/* Footer with Theme Toggle and Clear All */}
           <div className='border-t border-border p-4 space-y-4'>
+            <ApiKeyInput />
             {mounted && (
               <div className='flex items-center justify-between px-2'>
                 <span className='text-sm text-muted-foreground'>Theme</span>

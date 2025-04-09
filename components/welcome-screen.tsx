@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { CalendarIcon, ClockIcon, SparklesIcon } from '@/components/icons';
+import { useOpenAI } from '@/app/(preview)/providers';
 
 const suggestedActions = [
   {
@@ -27,6 +28,8 @@ interface WelcomeScreenProps {
 }
 
 export function WelcomeScreen({ onSuggestedActionClick }: WelcomeScreenProps) {
+  const { apiKey } = useOpenAI();
+
   return (
     <div className='mt-12 space-y-8'>
       <motion.div className='flex flex-col items-center justify-center'>
@@ -85,7 +88,9 @@ export function WelcomeScreen({ onSuggestedActionClick }: WelcomeScreenProps) {
 
           <div className='w-full pt-8 mt-4 border-t border-border'>
             <p className='text-center text-sm text-muted-foreground mb-6'>
-              Choose a template or describe your day
+              {apiKey
+                ? 'Choose a template or describe your day'
+                : 'Add your OpenAI API key to get started'}
             </p>
             <div className='grid grid-cols-1 gap-3 max-w-xl mx-auto'>
               {suggestedActions.map((suggestedAction, index) => (
@@ -99,7 +104,12 @@ export function WelcomeScreen({ onSuggestedActionClick }: WelcomeScreenProps) {
                     onClick={() =>
                       onSuggestedActionClick(suggestedAction.action)
                     }
-                    className='w-full text-left p-5 rounded-lg border border-border text-foreground hover:bg-accent hover:border-border/60 transition-colors'
+                    className={`w-full text-left p-5 rounded-lg border border-border text-foreground transition-colors ${
+                      apiKey
+                        ? 'hover:bg-accent hover:border-border/60'
+                        : 'opacity-50 cursor-not-allowed'
+                    }`}
+                    disabled={!apiKey}
                   >
                     <div className='font-medium'>{suggestedAction.title}</div>
                     <div className='text-sm text-muted-foreground mt-1'>

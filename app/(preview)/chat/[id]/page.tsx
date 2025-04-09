@@ -9,11 +9,13 @@ import { SideMenu } from '@/components/side-menu';
 import { useChats } from '@/lib/hooks/use-chats';
 import { useParams, useRouter } from 'next/navigation';
 import { WelcomeScreen } from '@/components/welcome-screen';
+import { useOpenAI } from '@/app/(preview)/providers';
 
 export default function ChatPage() {
   const params = useParams();
   const router = useRouter();
   const chatId = params.id as string;
+  const { apiKey } = useOpenAI();
 
   const { chats, updateChat, removeChat, clearAllChats } = useChats();
 
@@ -34,6 +36,10 @@ export default function ChatPage() {
     isLoading: streamLoading,
   } = useChat({
     id: chatId,
+    api: '/api/chat',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -94,10 +100,21 @@ export default function ChatPage() {
   };
 
   const handleSuggestedActionClick = (action: string) => {
+    if (!apiKey) {
+      return;
+    }
     append({
       role: 'user',
       content: action,
     });
+  };
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!apiKey) {
+      e.preventDefault();
+      return;
+    }
+    handleSubmit(e);
   };
 
   return (
@@ -120,7 +137,28 @@ export default function ChatPage() {
           className='flex-1 overflow-y-auto pb-36'
         >
           <div className='max-w-3xl mx-auto px-4 py-4'>
-            {messages.length === 0 ? (
+            {!apiKey ? (
+              <div className='flex flex-col items-center justify-center h-full py-8 text-center'>
+                <div className='bg-yellow-500/10 text-yellow-500 rounded-lg p-4 mb-4'>
+                  <h3 className='text-lg font-semibold mb-2'>
+                    OpenAI API Key Required
+                  </h3>
+                  <p className='text-sm'>
+                    Please add your OpenAI API key in the side menu to start
+                    chatting. You can get an API key from{' '}
+                    <a
+                      href='https://platform.openai.com/api-keys'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='underline hover:text-yellow-400'
+                    >
+                      OpenAI's website
+                    </a>
+                    .
+                  </p>
+                </div>
+              </div>
+            ) : messages.length === 0 ? (
               <WelcomeScreen
                 onSuggestedActionClick={handleSuggestedActionClick}
               />
@@ -143,17 +181,22 @@ export default function ChatPage() {
         <div className='absolute bottom-6 left-0 right-0 px-4'>
           <div className='max-w-3xl mx-auto'>
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handleFormSubmit}
               className='relative bg-card rounded-xl border border-border shadow-lg'
             >
               <input
                 ref={inputRef}
-                className='w-full bg-transparent rounded-xl px-4 py-3 outline-none text-foreground focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground'
-                placeholder='What would you like to plan today?'
+                className='w-full bg-transparent rounded-xl px-4 py-3 outline-none text-foreground focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed'
+                placeholder={
+                  apiKey
+                    ? 'What would you like to plan today?'
+                    : 'Please add your OpenAI API key to start chatting'
+                }
                 value={input}
                 onChange={(event) => {
                   setInput(event.target.value);
                 }}
+                disabled={!apiKey}
               />
             </form>
           </div>

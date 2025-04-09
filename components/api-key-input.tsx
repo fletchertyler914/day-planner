@@ -88,6 +88,13 @@ export function ApiKeyInput() {
         OpenAI API Key
       </label>
       <div className='flex flex-col gap-2'>
+        <div className='p-3 rounded-md bg-yellow-500/10 text-yellow-500 text-sm mb-2'>
+          <p>
+            <strong>Demo Notice:</strong> Your API key will be stored locally in
+            your browser using IndexedDB. This is for demo purposes only and
+            should not be used in production.
+          </p>
+        </div>
         <div className='flex gap-2'>
           <input
             type={showKey ? 'text' : 'password'}

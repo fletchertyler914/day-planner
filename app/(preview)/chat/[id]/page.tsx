@@ -47,6 +47,11 @@ export default function ChatPage() {
     useScrollToBottom<HTMLDivElement>();
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  // Show loading only until we get the first response
+  const lastMessage = messages[messages.length - 1];
+  const showLoading =
+    streamLoading && (!lastMessage || lastMessage.role === 'user');
+
   const handleChatSelect = (selectedChatId: string) => {
     router.push(`/chat/${selectedChatId}`);
   };
@@ -152,7 +157,7 @@ export default function ChatPage() {
                       rel='noopener noreferrer'
                       className='underline hover:text-yellow-400'
                     >
-                      OpenAI's website
+                      OpenAI&apos;s website
                     </a>
                     .
                   </p>
@@ -163,15 +168,26 @@ export default function ChatPage() {
                 onSuggestedActionClick={handleSuggestedActionClick}
               />
             ) : (
-              messages.map((message) => (
-                <Message
-                  key={message.id}
-                  role={message.role}
-                  content={message.content}
-                  toolInvocations={message.toolInvocations}
-                  reasoningMessages={[]}
-                />
-              ))
+              <>
+                {messages.map((message) => (
+                  <Message
+                    key={message.id}
+                    role={message.role}
+                    content={message.content}
+                    toolInvocations={message.toolInvocations}
+                    reasoningMessages={[]}
+                  />
+                ))}
+                {showLoading && (
+                  <Message
+                    role='assistant'
+                    content=''
+                    toolInvocations={undefined}
+                    reasoningMessages={[]}
+                    isLoading={true}
+                  />
+                )}
+              </>
             )}
             <div ref={messagesEndRef} />
           </div>

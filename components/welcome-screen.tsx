@@ -68,7 +68,7 @@ export function WelcomeScreen({ onSuggestedActionClick }: WelcomeScreenProps) {
                   </span>
                 </div>
                 <p className='text-muted-foreground pl-8'>
-                  Deep work sessions when you're at your best
+                  Deep work sessions when you&apos;re at your best
                 </p>
               </div>
               <div className='p-6 rounded-lg bg-accent/50 h-full flex flex-col'>

@@ -40,14 +40,17 @@ export const Message = ({
   content,
   toolInvocations,
   reasoningMessages,
+  isLoading,
 }: {
   role: string;
   content: string | ReactNode;
   toolInvocations: Array<ToolInvocation> | undefined;
   reasoningMessages: Array<TMessage>;
+  isLoading?: boolean;
 }) => {
   const usingTool = toolInvocations ?? false;
-  const loading = content === '' && toolInvocations === undefined;
+  const loading =
+    (content === '' && toolInvocations === undefined) || isLoading;
   const isInitialResponse =
     role === 'assistant' && !usingTool && reasoningMessages.length === 0;
 
@@ -80,21 +83,21 @@ export const Message = ({
             </div>
           </div>
           {loading ? (
-            <div className='flex items-center gap-1'>
+            <div className='text-foreground leading-relaxed bg-accent/50 rounded-2xl px-4 py-3 flex items-center gap-2 min-w-[60px] w-fit'>
               <motion.div
-                className='size-2 rounded-full bg-primary/40'
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                className='size-2.5 rounded-full bg-primary/80'
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 0.8, repeat: Infinity, delay: 0 }}
               />
               <motion.div
-                className='size-2 rounded-full bg-primary/40'
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                className='size-2.5 rounded-full bg-primary/80'
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 0.8, repeat: Infinity, delay: 0.2 }}
               />
               <motion.div
-                className='size-2 rounded-full bg-primary/40'
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                className='size-2.5 rounded-full bg-primary/80'
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 0.8, repeat: Infinity, delay: 0.4 }}
               />
             </div>
           ) : (

@@ -1,13 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Chat } from '@/lib/chat';
-import { getChats, deleteChat, saveChat } from '@/lib/chat';
+import { getChats, deleteChat, saveChat, deleteAllChats } from '@/lib/chat';
 import { Message } from 'ai';
 
 export function useChats() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load chats from the database
+  // Load chats from IndexedDB
   const loadChats = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -38,7 +38,7 @@ export function useChats() {
       );
 
       try {
-        // Save to database
+        // Save to IndexedDB
         await saveChat({ id: chatId, messages });
       } catch (error) {
         console.error('Error saving chat:', error);
@@ -58,7 +58,7 @@ export function useChats() {
       );
 
       try {
-        // Delete from database
+        // Delete from IndexedDB
         await deleteChat(chatId);
       } catch (error) {
         console.error('Error deleting chat:', error);
@@ -78,8 +78,8 @@ export function useChats() {
     setChats([]);
 
     try {
-      // Delete all chats from database
-      await Promise.all(previousChats.map((chat) => deleteChat(chat.id)));
+      // Delete all chats from IndexedDB
+      await deleteAllChats();
     } catch (error) {
       console.error('Error clearing chats:', error);
       // Revert on error

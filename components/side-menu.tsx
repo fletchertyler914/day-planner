@@ -77,15 +77,12 @@ export function SideMenu({
         onClick={toggleMenu}
         className={`fixed top-4 ${
           isOpen ? 'left-[16.5rem] sm:left-[19.5rem]' : 'left-4'
-        } z-50 p-2 rounded-lg bg-card/90 backdrop-blur-sm border border-border hover:bg-accent transition-all duration-200 ease-in-out`}
+        } z-50 p-2 rounded-lg bg-background/90 backdrop-blur-sm border border-border hover:bg-accent transition-all duration-200 ease-in-out`}
       >
         {isOpen ? (
-          <ChevronLeftIcon
-            size={20}
-            className='dark:text-white text-gray-900'
-          />
+          <ChevronLeftIcon size={20} className='text-foreground' />
         ) : (
-          <MenuIcon size={20} className='dark:text-white text-gray-900' />
+          <MenuIcon size={20} className='text-foreground' />
         )}
       </button>
 
@@ -101,7 +98,7 @@ export function SideMenu({
             <div className='flex items-center gap-2'>
               <CalendarIcon size={20} className='text-primary' />
               <h2 className='text-lg font-semibold text-foreground'>
-                Chat History
+                Day Plans
               </h2>
             </div>
             <button

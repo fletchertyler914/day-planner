@@ -95,44 +95,53 @@ export function ApiKeyInput() {
             should not be used in production.
           </p>
         </div>
-        <div className='flex gap-2'>
-          <input
-            type={showKey ? 'text' : 'password'}
-            id='apiKey'
-            value={tempKey}
-            onChange={(e) => setTempKey(e.target.value)}
-            placeholder='sk-...'
-            className='flex-1 px-3 py-1.5 bg-accent rounded-md border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground'
-          />
-          <button
-            onClick={() => setShowKey(!showKey)}
-            className='p-1.5 rounded-md hover:bg-accent-foreground/10 text-muted-foreground hover:text-foreground transition-colors'
-            title={showKey ? 'Hide API Key' : 'Show API Key'}
-          >
-            {showKey ? (
-              <EyeOffIcon className='w-4 h-4' />
-            ) : (
-              <EyeIcon className='w-4 h-4' />
-            )}
-          </button>
-        </div>
-        <div className='flex justify-end gap-2'>
-          {apiKey && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSave();
+          }}
+        >
+          <div className='flex gap-2'>
+            <input
+              type={showKey ? 'text' : 'password'}
+              id='apiKey'
+              value={tempKey}
+              onChange={(e) => setTempKey(e.target.value)}
+              placeholder='sk-...'
+              className='flex-1 px-3 py-1.5 bg-accent rounded-md border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground'
+            />
             <button
-              onClick={() => setIsEditing(false)}
-              className='px-3 py-1.5 text-sm hover:bg-accent rounded-md text-muted-foreground hover:text-foreground transition-colors'
+              type='button'
+              onClick={() => setShowKey(!showKey)}
+              className='p-1.5 rounded-md hover:bg-accent-foreground/10 text-muted-foreground hover:text-foreground transition-colors'
+              title={showKey ? 'Hide API Key' : 'Show API Key'}
             >
-              Cancel
+              {showKey ? (
+                <EyeOffIcon className='w-4 h-4' />
+              ) : (
+                <EyeIcon className='w-4 h-4' />
+              )}
             </button>
-          )}
-          <button
-            onClick={handleSave}
-            disabled={!tempKey}
-            className='px-3 py-1.5 text-sm bg-primary text-primary-foreground hover:bg-primary/90 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
-          >
-            Save API Key
-          </button>
-        </div>
+          </div>
+          <div className='flex justify-end gap-2 mt-2'>
+            {apiKey && (
+              <button
+                type='button'
+                onClick={() => setIsEditing(false)}
+                className='px-3 py-1.5 text-sm hover:bg-accent rounded-md text-muted-foreground hover:text-foreground transition-colors'
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              type='submit'
+              disabled={!tempKey}
+              className='px-3 py-1.5 text-sm bg-primary text-primary-foreground hover:bg-primary/90 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+            >
+              Save API Key
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

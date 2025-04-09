@@ -1,0 +1,108 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Here’s a Product Requirements Document (PRD) for your day planner web application:
+
+⸻
+
+Product Requirements Document (PRD)
+
+Project Name: Smart Day Planner
+
+⸻
+
+1. Overview
+
+Smart Day Planner is a responsive web application designed to help users plan their day in a fun, effective, and intelligent way. Users input their top tasks for the day, and the app leverages an LLM (Large Language Model) to generate an optimal, time-based plan with justifications for the schedule.
+
+⸻
+
+2. Goals
+	•	Provide users with a fast and intuitive way to prioritize their daily tasks.
+	•	Use AI to generate a reasoned and optimal schedule.
+	•	Present the output in a visually fun, simple, and engaging format.
+	•	Ensure compatibility across all screen sizes (mobile-first design).
+
+⸻
+
+3. Features
+
+3.1 Task Input Interface
+	•	Text input with multiple rows (or one at a time with add button)
+	•	Input validation (e.g. min 1 task, max 10 tasks)
+	•	Optionally use icons or auto-suggestions to categorize tasks
+	•	“Plan My Day” button triggers LLM scheduling
+
+3.2 Loading State
+	•	Display a fun animated spinner or progress bar while waiting on AI-generated plan
+	•	Include “thinking…” or “planning your perfect day” messaging
+
+3.3 AI-Powered Schedule Generator
+	•	Use a simple LLM (e.g., OpenAI, open-source) to:
+	•	Detect mandatory tasks (e.g., specific meetings)
+	•	Consider dependencies and time-of-day relevance (e.g., school hours)
+	•	Group similar tasks (e.g., outdoor activities)
+	•	Provide justifications for order of events
+
+3.4 Visualization Output
+	•	Timeline or vertical list format with:
+	•	Time blocks
+	•	Task descriptions
+	•	Fun icons or emojis
+	•	Optional rationale text (e.g., “we chose this time because…”)
+	•	Option to “Replan” or “Start Over”
+
+⸻
+
+4. UX/UI Requirements
+	•	Mobile-first responsive design using a modern UI framework (e.g., Tailwind, shadcn/ui)
+	•	Clean, minimalist style with playful accents (emojis, color, animations)
+	•	Accessible font sizes and touch targets for mobile
+	•	Light/Dark mode toggle (optional)
+
+⸻
+
+5. Technical Requirements
+
+Frontend
+	•	Framework: Next.js (preferred for SSR and flexibility)
+	•	UI Components: shadcn/ui or similar
+	•	State Management: React hooks / context
+	•	Mobile Responsiveness: Tailwind CSS / media queries
+
+Backend / API
+	•	Language Model: OpenAI GPT or local model via API call
+	•	Scheduling Logic: Simple rule-based prompts combined with LLM reasoning
+	•	Hosting: Vercel or Netlify
+
+⸻
+
+6. User Flow
+	1.	User visits site (mobile or web)
+	2.	Enters list of things they want to do today
+	3.	Clicks “Plan My Day”
+	4.	Sees a loading spinner (backend calls LLM)
+	5.	Receives an animated plan, showing:
+	•	Time blocks
+	•	Activities
+	•	Reasons for order
+	6.	Can refresh plan or enter new tasks
+
+⸻
+
+7. Stretch Goals (V2 Ideas)
+	•	Drag-and-drop editable timeline
+	•	Voice input for tasks
+	•	“Motivate Me” feature with affirmations or AI coaching
+	•	Integrate calendar export (Google Calendar, iCal)
+	•	Daily reminders or mobile push notifications
+
+⸻
+
+8. Success Criteria
+	•	Users can easily input tasks and receive a schedule
+	•	LLM consistently provides sensible, reasoned plans
+	•	Works smoothly across mobile, tablet, and desktop
+	•	90%+ users report the plan feels “helpful” or “fun to use”

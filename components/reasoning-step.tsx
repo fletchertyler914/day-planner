@@ -1,20 +1,22 @@
-"use client";
+'use client';
 
-import { type ReasoningStep as TReasoningStep } from "@/lib/schema";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
-export const ReasoningStep = ({ step }: { step: TReasoningStep }) => {
+interface ReasoningStep {
+  title: string;
+  content: string;
+}
+
+export function ReasoningStep({ step }: { step?: ReasoningStep }) {
+  if (!step) return null;
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-50 p-4 rounded-lg flex flex-col w-full justify-between"
-    >
-      <p className="text-[10px] uppercase text-zinc-500 dark:text-zinc-400">
-        reasoning step
-      </p>
-      <h3 className="font-bold">{step.title}</h3>
-      <p className="text-zinc-500 dark:text-zinc-400 text-sm">{step.content}</p>
-    </motion.div>
+    <div className='rounded-xl border border-border bg-card p-4'>
+      <div className='flex items-center gap-2'>
+        <div className='size-2 rounded-full bg-primary' />
+        <h3 className='font-medium text-foreground'>{step.title}</h3>
+      </div>
+      <p className='mt-2 text-sm text-muted-foreground'>{step.content}</p>
+    </div>
   );
-};
+}
